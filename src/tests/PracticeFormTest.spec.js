@@ -16,6 +16,7 @@ test('Sample test 2', async ({ page }) => {
     const text = await page.getByText('Events').innerText()
     console.log(text)
     expect(text).toBe("EVENTS")
+    expect(await page.getByText('Events').isVisible()).toBeTruthy()
     await page.close()
 
 })
