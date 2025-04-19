@@ -59,4 +59,41 @@ test("Positive Login Test", async ({ page }) => {
     const successMessage = await page.locator("//div[@id='prooood']/descendant::h2").innerText()
     expect(successMessage).toBe('SHOPPING CART')
     expect(await page.locator("//button[text()='PROCEED TO CHECKOUT']").isVisible()).toBeTruthy()
+    expect(await page.locator("#Log Out").isVisible).toBeTruthy()
+})
+
+test('Speed test', async ({ page }) => {
+    await page.goto("https://thelab.boozang.com/")
+    await page.locator("//div[@class='menu_btn']/child::button").click()
+    await page.getByText('Speed Game').click()
+    const introMessage = await page.locator('//section[@class="intro_section"]/child::h1').innerText()
+    expect(introMessage).toBe("Speed Game")
+
+    const startGame = page.locator("//button[@class='form_btn add' and text()='Start Game']")
+    const endGame = page.locator("//button[@class='form_btn delete' and text()='End Game']")
+    const successMessage = page.locator("//div[@class='result_wrapper show']/descendant::p[@data-testid='message']")
+    const reactionTime = page.locator("//div[@class='result_wrapper show']/descendant::p[@class='sub_message']")
+
+    await startGame.click()
+    await endGame.click()
+    const message = await successMessage.innerText()
+    expect(message).toBe("Success")
+    expect(message).not.toBe("Succsss")
+    const reactionTimeText = await reactionTime.innerText()
+    console.log(reactionTimeText)
+})
+
+test('Rest API Test', async ({ page }) => {
+    const response = await page.request.get('https://jsonplaceholder.typicode.com/posts/1')
+    const responseBody = await response.json()
+    console.log(responseBody)
+})
+
+test('API test', async ({ page }) => {
+    const response1 = await page.request.get('https://jsonplaceholder.typicode.com/posts')
+    const ans = await response1.json()
+    console.log(ans)
+    expect(response1.status()).toBe(200)
+    expect(response1.ok()).toBeTruthy()
+    expect(ans[0].userId).toBe(1)
 })
